@@ -2496,6 +2496,18 @@ bool DeRestPluginPrivate::sendConfigureReportingRequest(BindingTask &bt)
             return sendConfigureReportingRequest(bt, {rq});
         }
     }
+    else if (bt.binding.clusterId == ANALOG_INPUT_CLUSTER_ID)
+    {
+      if (modelId == QLatin1String("lumi.airmonitor.acn01"))
+      {
+          rq.dataType = deCONZ::Zcl16BitUint;
+          rq.attributeId = 0x0055;       // Present Value
+          rq.minInterval = 60;
+          rq.maxInterval = 3600;
+          rq.reportableChange16bit = 5; // According to technical manual
+          return sendConfigureReportingRequest(bt, {rq});
+      }
+    }
     return false;
 }
 
@@ -3475,6 +3487,11 @@ bool DeRestPluginPrivate::checkSensorBindingsForAttributeReporting(Sensor *senso
                 continue;
             }
         }
+        else if (*i == ANALOG_INPUT_CLUSTER_ID && sensor->modelId() == QLatin1String("lumi.airmonitor.acn01"))
+        {
+            val = sensor->getZclValue(*i, 0x0055); // Presented Value 
+
+        }
         else if (*i == METERING_CLUSTER_ID)
         {
             val = sensor->getZclValue(*i, 0x0000); // Curent Summation Delivered
@@ -3586,6 +3603,7 @@ bool DeRestPluginPrivate::checkSensorBindingsForAttributeReporting(Sensor *senso
         case DOOR_LOCK_CLUSTER_ID:
         case BOSCH_AIR_QUALITY_CLUSTER_ID:
         case DEVELCO_AIR_QUALITY_CLUSTER_ID:
+        case ANALOG_INPUT_CLUSTER_ID:
         {
             // For the moment reserved to doorlock device
             if (*i == DOOR_LOCK_CLUSTER_ID && sensor->type() != QLatin1String("ZHADoorLock"))

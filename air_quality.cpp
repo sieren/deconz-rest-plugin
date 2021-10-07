@@ -85,6 +85,15 @@ void DeRestPluginPrivate::handleAirQualityClusterIndication(const deCONZ::ApsDat
             }
                 break;
 
+                case 0x0055: // Presented value
+                {
+                    if (ind.clusterId() == ANALOG_INPUT_CLUSTER_ID && sensor->modelId() == QLatin1String("lumi.airmonitor.acn01"))    // Develco air quality sensor
+                    {
+                        levelPpb = static_cast<quint32>(attr.numericValue().real);
+                    }
+                }
+                    break;
+                    
             case 0x4004:
             {
                 // Bosch air quality sensor

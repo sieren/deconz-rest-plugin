@@ -1333,7 +1333,8 @@ void DeRestPluginPrivate::apsdeDataIndication(const deCONZ::ApsDataIndication &i
             break;
 
         case DEVELCO_AIR_QUALITY_CLUSTER_ID: // Develco specific -> VOC Management
-        case BOSCH_AIR_QUALITY_CLUSTER_ID: // Bosch Air quality sensor
+        case BOSCH_AIR_QUALITY_CLUSTER_ID: // Bosch Air quality senso
+        case ANALOG_INPUT_CLUSTER_ID: // Aqara Air Monitor TVOC
             if (!DEV_TestStrict()) { handleAirQualityClusterIndication(ind, zclFrame); }
             break;
 
